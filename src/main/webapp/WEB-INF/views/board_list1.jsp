@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -26,7 +27,7 @@
 			<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 커뮤니티 &gt; <strong>여행지리뷰</strong>
 		</span>
 		<span style="float: right;">
-			<input type="button" value="로그인" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='board_write1.jsp'" />
+			<input type="button" value="로그인" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/login.do'" />
 		</span>
 	</div> 
 	<div class="contents_sub">	
