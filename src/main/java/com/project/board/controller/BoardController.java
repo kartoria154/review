@@ -26,4 +26,13 @@ public class BoardController {
 		 mav.setViewName("board_list1");
 		 return mav;
 	}
+	
+	@RequestMapping(value = "board/write.do")
+	public ModelAndView boardWrite(HttpServletRequest request, HttpServletResponse response) {
+		 ModelAndView mav = new ModelAndView();
+		 int cpage = 1;
+		 mav.setViewName("board_write1");
+		 mav.addObject("cpage", cpage);
+		 return mav;
+	}
 }

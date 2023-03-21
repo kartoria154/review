@@ -20,6 +20,7 @@
 </head>
 
 <body>
+<c:set var="loginData" value="${sessionScope.userSeq }"/>
 <!-- 상단 디자인 -->
 <div class="contents1"> 
 	<div class="con_title"> 
@@ -27,7 +28,15 @@
 			<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 커뮤니티 &gt; <strong>여행지리뷰</strong>
 		</span>
 		<span style="float: right;">
-			<input type="button" value="로그인" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/login.do'" />
+			<c:choose>
+				<c:when test="${loginData != null }">
+					<input type="button" value="로그아웃" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/logout_ok.do'" />
+				</c:when>
+				<c:otherwise>
+					<input type="button" value="로그인" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/login.do'" />
+				</c:otherwise>
+			</c:choose>
+			
 		</span>
 	</div> 
 	<div class="contents_sub">	
@@ -181,7 +190,7 @@
 		<!--//게시판-->	
 		
 		<div class="align_right">		
-			<input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='board_write1.jsp'" />
+			<input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/board/write.do'" />
 		</div>
 		
 		<!--페이지넘버-->

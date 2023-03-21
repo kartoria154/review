@@ -20,7 +20,7 @@ public class MemberController {
 	
 	//로그인 창으로 이동
 	@RequestMapping(value = "login.do")
-	public ModelAndView boardList(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
 		 ModelAndView mav = new ModelAndView();
 		 mav.setViewName("login");
 		 return mav;
@@ -82,6 +82,13 @@ public class MemberController {
 		 int flag = dao.joinMember_ok(to);
 		 mav.addObject("flag", flag);
 		 mav.setViewName("joinMember_ok");
+		 return mav;
+	}
+	
+	@RequestMapping(value = "logout_ok.do")
+	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
+		 ModelAndView mav = new ModelAndView();
+		 mav.setViewName("logout_ok");
 		 return mav;
 	}
 	
