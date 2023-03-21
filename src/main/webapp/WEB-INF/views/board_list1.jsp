@@ -46,7 +46,7 @@
 					<tr>
 						<td class='boardThumbWrap'>
 							<div class='boardThumb'>
-								<a href="board_view1.jsp"><img src="../../upload/607927_1_thumb1.jpg" border="0" width="100%" /></a>
+								<a href="board_view1.jsp"><img src="../../upload/cancola.png" border="0" width="100%" /></a>
 							</div>																		
 						</td>
 					</tr>

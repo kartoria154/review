@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 	<head>
@@ -8,35 +9,98 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<title>Insert title here</title>
 		<link rel="stylesheet" type="text/css" href="../../css/board_write.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script type="text/javascript">
+			/* 중복 체크 확인 */
+			var id_check_num = 0;
+			/* 중복 검사 후 변경했는지 확인 */
+			var id_value = "";
+			/* 비밀번호 확인 */
+			var pw_check_num = 0;
 			window.onload = function() {
 				document.getElementById('joinBtn').onclick = function(){
-					if( document.joinForm.info.checked == false ) {
+					if( document.joinForm.info.checked == false ) {		/* 개인정보 제공 동의 */
 						alert( '동의하셔야 합니다.' );
 						return false;
 					}
-					if(document.joinForm.id.value.trim() == '') {
+					if(document.joinForm.id.value.trim() == '') {		/* id값이 입력되었는지 확인 */
 						alert('ID를 입력하십시오.')
 						return false;
 					}
-					if(document.joinForm.password.value.trim() == '') {
+					if(id_check_num != 1 && id_check_value == document.joinForm.id.value.trim()){	/* id중복검사 여부와 검사 후 변경했는지 판단 */
+						alert('ID 중복검사를 하십시오.')
+						return false;
+					}
+					if(document.joinForm.password.value.trim() == '') {	/* 비일번호 입력 확인 */
 						alert('비밀번호를 입력하십시오.')
 						return false;
 					}
-					if(document.joinForm.password_check.value.trim() == '') {
+					if(document.joinForm.password_check.value.trim() == '') {	/* 비일번호 재확인 입력 확인 */
 						alert('비밀번호 확인을 하십시오.')
 						return false;
 					}
-					if(document.joinForm.userName.value.trim() == '') {
+					if(pw_check_num != 1){								/* 비일번호 재확인 일치 확인 */
+						alert('비밀번호가 일치하지 않습니다.')
+						return false;
+					}
+					if(document.joinForm.userName.value.trim() == '') {	/* 이름 입력 확인 */
 						alert('이름을 입력하십시오.')
 						return false;
 					}
 					document.joinForm.submit();
 				};
-			}
+				document.getElementById('id_check').onclick = function(){
+					/* console.log("중복검사 호출");
+					console.log("아이디 입력 값 : " + joinForm.id.value); */
+					if(document.joinForm.id.value.trim() == '') {
+						alert('ID를 입력하십시오.')
+						return false;
+					} else {
+						$.ajax({
+							type :"post",/* 전송 방식 */
+							url :"/member/id_check.do", /* 컨트롤러 사용할 때. 내가 보낼 데이터의 주소. */
+							data : {"id" : joinForm.id.value},
+							async:false,
+							dataType : "text",	/* text, xml, html, script, json, jsonp 가능 */
+							//정상적인 통신을 했다면 function은 백엔드 단에서 데이터를 처리.
+							success : function(data){	
+								console.log(data);
+								if(data == "1"){
+									alert("이 아이디는 사용 가능합니다.");
+									id_check_num = 1;
+									id_value = document.joinForm.id.value.trim();
+								}else{	//ajax가 제대로 안됐을 때 .
+									alert("이 아이디는 사용  불가능합니다.");
+									id_check_num = 0;
+								}
+							},
+							error : function(){
+								alert("아이디 중복 확인 ajax 실행 실패");
+							}
+						});
+					};
+				}
+				document.getElementById('password_check').onkeyup = function() {
+					/* 비밀번호, 비밀번호 확인 입력창에 입력된 값을 비교해서 같다면 비밀번호 일치, 그렇지 않으면 불일치 라는 텍스트 출력.*/
+					/* document : 현재 문서를 의미함. 작성되고 있는 문서를 뜻함. */
+					var password = document.getElementById('password');					//비밀번호 
+					var passwordConfirm = document.getElementById('password_check');	//비밀번호 확인 값
+					var confrimMsg = document.getElementById('confirmMsg');				//확인 메세지
+					var correctColor = "#00ff00";	//맞았을 때 출력되는 색깔.
+					var wrongColor ="#ff0000";	//틀렸을 때 출력되는 색깔
+					if(password.value == password_check.value){//password 변수의 값과 passwordConfirm 변수의 값과 동일하다.
+						confirmMsg.style.color = correctColor;/* span 태그의 ID(confirmMsg) 사용  */
+						confirmMsg.innerHTML ="비밀번호 일치";/* innerHTML : HTML 내부에 추가적인 내용을 넣을 때 사용하는 것. */
+						pw_check_num = 1;
+					}else{
+						confirmMsg.style.color = wrongColor;
+						confirmMsg.innerHTML ="비밀번호 불일치";
+						pw_check_num = 0;
+					}
+				}
+			};
 		</script>
 	</head>
-	
 	<body>
 		<!-- 상단 디자인 -->
 		<div class="contents1"> 
@@ -45,7 +109,6 @@
 					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 커뮤니티 &gt; <strong>여행지리뷰</strong>
 				</p>
 			</div> 
-		
 			<form action="./joinMember_ok.do" method="post" name="joinForm">
 				<div class="contents_sub">
 				<!--게시판-->
@@ -55,16 +118,16 @@
 								<th class="top">ID</th>
 								<td class="top" colspan="3">
 									<input type="text" name="id" value="" class="board_view_input_mail" />
-									<input type="button" value="중복체크" class="btn_list btn_txt02" style="cursor: pointer;" onclick="" />	
+									<input type="button" id="id_check" value="중복체크" class="btn_list btn_txt02" style="cursor: pointer;"/>
 								</td>
 							</tr>
 							<tr>
 								<th>비밀번호</th>
-								<td colspan="3"><input type="password" name="password" value="" class="board_view_input" /></td>
+								<td colspan="3"><input type="password" name="password" id="password" value="" class="board_view_input" /></td>
 							</tr>
 							<tr>
 								<th>비밀번호 확인</th>
-								<td colspan="3"><input type="password" name="password_check" value="" class="board_view_input"/></td>
+								<td colspan="3"><input type="password" name="password_check" id="password_check" value="" class="board_view_input"/><span id ="confirmMsg"></span></td>
 							</tr>
 							<tr>
 								<th>이름</th>
@@ -78,7 +141,6 @@
 								</td>
 							</tr>
 						</table>
-						
 						<table>	
 							<tr>
 								<br />
@@ -99,7 +161,6 @@
 							</tr>
 						</table>
 					</div>
-		
 					<div class="btn_area">
 						<div class="align_left">			
 							<input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='board_list1.jsp'" />
@@ -107,12 +168,9 @@
 						<div class="align_right">			
 							<input type="button" value="쓰기" id="joinBtn" class="btn_write btn_txt01" style="cursor: pointer;" />					
 						</div>	
-					</div>	
-					<!--//게시판-->
+					</div>
 				</div>
 			</form>
 		</div>
-		<!-- 하단 디자인 -->
-		
 	</body>
 </html>
