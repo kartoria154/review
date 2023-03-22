@@ -36,7 +36,6 @@
 					<input type="button" value="로그인" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/login.do'" />
 				</c:otherwise>
 			</c:choose>
-			
 		</span>
 	</div> 
 	<div class="contents_sub">	

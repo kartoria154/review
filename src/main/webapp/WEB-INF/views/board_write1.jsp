@@ -50,11 +50,11 @@
 		<div class="contents1"> 
 			<div class="con_title"> 
 				<p style="margin: 0px; text-align: right">
-					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 커뮤니티 &gt; <strong>여행지리뷰</strong>
+					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 게시판 &gt; <strong>게시물 작성</strong>
 				</p>
 			</div> 
 		
-			<form action="board/write_ok" method="post" name="wfrm" enctype="multipart/form-data">
+			<form action="/board/write_ok.do" method="post" name="wfrm" enctype="multipart/form-data">
 				<input type="hidden" name="userSeq" value="<%=userSeq %>"/>
 				<div class="contents_sub">
 					<div class="board_write">
