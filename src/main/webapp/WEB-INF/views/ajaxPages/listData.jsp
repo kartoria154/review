@@ -1,13 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="com.project.board.to.BoardListTO" %>
-<%@ page import="com.project.board.to.BoardListTO" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%
-	BoardListTO listTOJS = (BoardListTO)request.getAttribute("listTO");
-	int cpage = listTOJS.getCpage();
-%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +27,7 @@
 								<tr>
 									<td class='boardThumbWrap'>
 										<div class='boardThumb'>
-											<a href='/board/view.do?cpage=${listTO.getCpage() })'><img src="../../upload/${lists.getProductFileName() }" border="0" width="100%" height="100%"/></a>
+											<a href='/board/view.do?cpage=${listTO.getCpage() }'><img src="../../upload/${lists.getProductFileName() }" border="0" width="100%" height="100%"/></a>
 										</div>																		
 									</td>
 								</tr>

@@ -29,6 +29,7 @@ public class BoardController {
 	@Autowired
 	private CommentDAO cmtDao;
 	
+	// list 페이지 호출 메서드
 	@RequestMapping(value = "board/list.do")
 	public ModelAndView boardList(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
@@ -36,6 +37,7 @@ public class BoardController {
 		return mav;
 	}
 	
+	// list 페이지의 게시물 정보를 부르는 메서드
 	@RequestMapping(value = "/board/list.data")
 	public ModelAndView boardListData(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
@@ -52,6 +54,7 @@ public class BoardController {
 		return mav;
 	}
 	
+	// write 페이지 호출 메서드
 	@RequestMapping(value = "board/write.do")
 	public ModelAndView boardWrite(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
@@ -61,23 +64,27 @@ public class BoardController {
 		return mav;
 	}
 	
+	// 작성한 내용을 저장하기 위한 메서드
 	@RequestMapping(value = "board/write_ok.do")
 	public ModelAndView boardWrite_ok(HttpServletRequest request, HttpServletResponse response, @RequestParam("upload") MultipartFile upload) {
 		ModelAndView mav = new ModelAndView();
 		HttpSession session = request.getSession();
 		BoardTO to = new BoardTO();
-		
+					// 로그인 때 저장한 session값을 호출
 		to.setUserSeq((int)session.getAttribute("userSeq"));
 		to.setId((String)session.getAttribute("id"));
 		to.setNickName((String)session.getAttribute("nickName"));
 		to.setProductName(request.getParameter("productName"));
 		to.setProductCategory(request.getParameter("productCategory"));
 		to.setProductContent(request.getParameter("productContent"));
-		
+		// 사진 파일이 존재하면 사진을 지정 경로에 업로드하고 사진명을 db에 저장 
 		if(!upload.isEmpty()) {
 			try {
+				// 사진 파일의 확장자 명
 				String extention = upload.getOriginalFilename().substring(upload.getOriginalFilename().indexOf("."));
+									// 파일의 중복을 피하기 위해 UUID 사용
 				to.setProductFileName(UUID.randomUUID().toString() + extention);
+				// 파일 업로드
 				upload.transferTo(new File(to.getProductFileName()));
 			} catch (IllegalStateException e) {
 				System.out.println("[IllegalState 에러]" + e.getMessage());

@@ -1,14 +1,14 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
+	// 로그인을 하지 않을시 글 작성 불가
 	if( session.getAttribute( "userSeq" ) == null){
     	out.println("<script type='text/javascript'>");
     	out.println("alert('로그인해야 됩니다.');");
     	out.println("location.href='/login.do'");
     	out.println("</script>");
     } else {
-    	//String cpage = (String)request.getAttribute("cpage");
-		int userSeq = (int)session.getAttribute("userSeq");
+    	int cpage = (int)request.getAttribute("cpage");
 		String id = (String)session.getAttribute("id");
 		String nickName = (String)session.getAttribute("nickName");
 %>
@@ -23,6 +23,7 @@
 		<script type="text/javascript">
 			window.onload = function() {
 				document.getElementById( 'wbtn' ).onclick = function() {
+					// 필수 입력 태그
 					if( document.wfrm.productCategory.value.trim() == '' ) {
 						alert( '제품 카테고리를 선택하십시오.' );
 						return false;
@@ -55,7 +56,6 @@
 			</div> 
 		
 			<form action="/board/write_ok.do" method="post" name="wfrm" enctype="multipart/form-data">
-				<input type="hidden" name="userSeq" value="<%=userSeq %>"/>
 				<div class="contents_sub">
 					<div class="board_write">
 						<table>
@@ -90,7 +90,7 @@
 					</div>
 					<div class="btn_area">
 						<div class="align_left">			
-							<input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='board_list1.jsp'" />
+							<input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/board/list.do?cpage=<%=cpage %>'" />
 						</div>
 						<div class="align_right">			
 							<input type="button" id="wbtn" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" />					
