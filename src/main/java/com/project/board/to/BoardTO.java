@@ -20,4 +20,5 @@ public class BoardTO {
 	private Date productWriteDate;
 	private int productHit;
 	private double productGrade;
+	private int wgap;
 }

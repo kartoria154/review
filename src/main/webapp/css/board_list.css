@@ -29,7 +29,7 @@ a:active { color:#0b96d4; text-decoration: none;}
 
 .board_top {width:100%; overflow:hidden;}
 .board_top .f_search {float:right; width:330px; text-align:right;} 
-.board_top .bold {float:left; width:200px; margin:0px 0;}
+.board_top .bold {float:left; width:100%; margin:0px 0;}
 
 .board_title {font:bold 14px dotum; color:#000;}
 .board_list {border-top:1px solid #464646;}

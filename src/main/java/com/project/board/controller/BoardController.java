@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.project.board.dao.BoardDAO;
 import com.project.board.dao.CommentDAO;
+import com.project.board.to.BoardListTO;
 import com.project.board.to.BoardTO;
 
 @RestController
@@ -30,18 +31,34 @@ public class BoardController {
 	
 	@RequestMapping(value = "board/list.do")
 	public ModelAndView boardList(HttpServletRequest request, HttpServletResponse response) {
-		 ModelAndView mav = new ModelAndView();
-		 mav.setViewName("board_list1");
-		 return mav;
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("board_list1");
+		return mav;
+	}
+	
+	@RequestMapping(value = "/board/list.data")
+	public ModelAndView boardListData(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		int cpage = 1;
+		if(request.getParameter("cpage") != null && !request.getParameter("cpage").equals("")) {
+			cpage = Integer.parseInt(request.getParameter("cpage"));
+		}
+		
+		BoardListTO listTO = new BoardListTO();
+		listTO.setCpage(cpage);
+		listTO = dao.boardList(listTO);
+		mav.addObject("listTO", listTO);
+		mav.setViewName("/ajaxPages/listData");
+		return mav;
 	}
 	
 	@RequestMapping(value = "board/write.do")
 	public ModelAndView boardWrite(HttpServletRequest request, HttpServletResponse response) {
-		 ModelAndView mav = new ModelAndView();
-		 int cpage = 1;
-		 mav.setViewName("board_write1");
-		 mav.addObject("cpage", cpage);
-		 return mav;
+		ModelAndView mav = new ModelAndView();
+		int cpage = 1;
+		mav.setViewName("board_write1");
+		mav.addObject("cpage", cpage);
+		return mav;
 	}
 	
 	@RequestMapping(value = "board/write_ok.do")
@@ -71,6 +88,13 @@ public class BoardController {
 		int flag = dao.boardWrite_ok(to);
 		mav.addObject("flag", flag);
 		mav.setViewName("board_write1_ok");
+		return mav;
+	}
+
+	@RequestMapping(value = "board/view.do")
+	public ModelAndView boardView(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("board_view1");
 		return mav;
 	}
 }
