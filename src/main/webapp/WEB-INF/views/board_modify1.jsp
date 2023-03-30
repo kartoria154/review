@@ -1,75 +1,115 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.project.board.to.BoardTO" %>
+<%
+	// 로그인한 회원과 작성된 글의 회원번호가 같지 않을시 list로 돌아간다
+	BoardTO to = (BoardTO)request.getAttribute("to");
+	if(to.getUserSeq() != (int)session.getAttribute("userSeq")){
+    	out.println("<script type='text/javascript'>");
+    	out.println("alert('작성자가 일치하지 않습니다.');");
+    	out.println("location.href='/board/list.do'");
+    	out.println("</script>");
+    } else {
+    	int cpage = (int)request.getAttribute("cpage");
+		String id = (String)session.getAttribute("id");
+		String nickName = (String)session.getAttribute("nickName");
+%>
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title>Insert title here</title>
-<link rel="stylesheet" type="text/css" href="../../css/board_write.css">
-</head>
-
-<body>
-<!-- 상단 디자인 -->
-<div class="contents1"> 
-	<div class="con_title"> 
-		<p style="margin: 0px; text-align: right">
-			<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 커뮤니티 &gt; <strong>여행지리뷰</strong>
-		</p>
-	</div> 
-
-	<form action="" method="post" name="">
-		<div class="contents_sub">
-		<!--게시판-->
-			<div class="board_write">
-				<table>
-				<tr>
-					<th class="top">글쓴이</th>
-					<td class="top" colspan="3"><input type="text" name="writer" value="" class="board_view_input_mail" maxlength="5" /></td>
-				</tr>
-				<tr>
-					<th>제목</th>
-					<td colspan="3"><input type="text" name="subject" value="" class="board_view_input" /></td>
-				</tr>
-				<tr>
-					<th>비밀번호</th>
-					<td colspan="3"><input type="password" name="password" value="" class="board_view_input_mail"/></td>
-				</tr>
-				<tr>
-					<th>내용</th>
-					<td colspan="3">
-						<textarea name="content" class="board_editor_area"></textarea>
-					</td>
-				</tr>
-				<tr>
-					<th>이미지</th>
-					<td colspan="3">
-						기존 이미지 : <br /><br />
-						<input type="file" name="upload" value="" class="board_view_input" /><br /><br />
-					</td>
-				</tr>
-				<tr>
-					<th>이메일</th>
-					<td colspan="3"><input type="text" name="mail1" value="" class="board_view_input_mail"/> @ <input type="text" name="mail2" value="" class="board_view_input_mail"/></td>
-				</tr>
-				</table>
-			</div>
-
-			<div class="btn_area">
-				<div class="align_left">			
-					<input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='board_list1.jsp'" />
-					<input type="button" value="보가" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='board_view1.jsp'" />
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Insert title here</title>
+		<link rel="stylesheet" type="text/css" href="../../css/board_write.css">
+		<script type="text/javascript">
+			window.onload = function() {
+				document.getElementById('mbtn').onclick = function() {
+					//alert('click');
+					if(document.mfrm.password.value.trim() == ''){
+						alert('비밀번호 입력바람');
+						return;
+					} else if(document.mfrm.productCategory.value.trim() == ''){
+						alert('카테고리를 지정하십시오');
+						return;
+					}
+					document.mfrm.submit();
+				};
+			};
+		</script>
+	</head>
+	
+	<body>
+		<div class="contents1"> 
+			<div class="con_title"> 
+				<p style="margin: 0px; text-align: right">
+					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 커뮤니티 &gt; <strong>여행지리뷰</strong>
+				</p>
+			</div> 
+			<form action="/board/modify_ok.do" method="post" name="mfrm" enctype="multipart/form-data">
+				<input type="hidden" name="productSeq" value="${to.getProductSeq() }"/>
+				<input type="hidden" name="cpage" value="${cpage }"/>
+				<div class="contents_sub">
+					<div class="board_write">
+						<table>
+							<tr>
+								<th class="top">작성자(아이디)</th>
+								<td class="top" colspan="3">${to.getNickName() }(${to.getId() })</td>
+							</tr>
+							<tr>
+								<th>[분류]상품명</th>
+								<td colspan="3">
+									<select name="productCategory" >
+									    <option value="">--카테고리--</option>
+									    <option value="${to.getProductCategory() }" selected="selected">이전 분류 : ${to.getProductCategory() }</option>
+									    <option value="콜라">콜라</option>
+									    <option value="사이다">사이다</option>
+									</select>
+									<input type="text" name="productName" value="${to.getProductName() }" class="board_view_input" />
+								</td>
+							</tr>
+							<tr>
+								<th>비밀번호</th>
+								<td colspan="3"><input type="password" name="password" value="" class="board_view_input_mail"/></td>
+							</tr>
+							<tr>
+								<th>내용</th>
+								<td colspan="3">
+									<textarea name="content" class="board_editor_area">${to.getProductContent() }</textarea>
+								</td>
+							</tr>
+							<tr>
+								<th>이미지</th>
+								<td colspan="3">
+									기존 이미지 : ${to.getProductFileName() }<br /><br />
+									<input type="file" name="upload" value="" class="board_view_input" /><br /><br />
+								</td>
+							</tr>
+							<tr>
+								<th>등록일 / 조회수 / 평점</th>
+								<td colspan="3">
+									${to.getProductWriteDate() } / ${to.getProductHit() } / ${to.getProductGrade() }
+								</td>
+							</tr>
+						</table>
+					</div>
+		
+					<div class="btn_area">
+						<div class="align_left">			
+							<input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/board/list.do?cpage=${cpage}'" />
+							<input type="button" value="보기" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/board/view.do?cpage=${cpage}&productSeq=${to.getProductSeq() }'" />
+						</div>
+						<div class="align_right">			
+							<input type="button" id="mbtn" value="수정" class="btn_write btn_txt01" style="cursor: pointer;" />
+						</div>	
+					</div>
 				</div>
-				<div class="align_right">			
-					<input type="button" value="수정" class="btn_write btn_txt01" style="cursor: pointer;" />
-				</div>	
-			</div>	
-			<!--//게시판-->
+			</form>
 		</div>
-	</form>
-</div>
-<!-- 하단 디자인 -->
-
-</body>
+	</body>
 </html>
+<%
+    }
+%>
+

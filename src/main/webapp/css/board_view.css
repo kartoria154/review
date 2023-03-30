@@ -51,6 +51,7 @@ a:active { color:#0b96d4; text-decoration: none;}
 .coment_re {font:11px dotum; padding:5px; background-color:#fafafa;border-bottom:1px dotted #d2d2d2;word-wrap: break-word; word-break: break-all;}
 .coment_re_txt {background-color:#fafafa;line-height:15px; padding:5px 0 0 0}
 .coment_re_txt img {padding-top:2px;}
+.cmtGrplB_bg{background-color:#fafafa;}
 
 .upload_db_wrap td {border-bottom:0}
 .upload_db_wrap div {padding:3px 0 0 0}
@@ -58,7 +59,7 @@ a:active { color:#0b96d4; text-decoration: none;}
 /* Button */
 .btn_write { display:inline-block; background:#5f5f5f; border:1px solid #404144;padding:6px 17px 7px 17px;}
 .btn_list  { display:inline-block; background:#fcfcfc; border:1px solid #bcbcbc;padding:6px 17px 7px 17px;}
-.btn_comment  { display:inline-block; background:#fcfcfc; border:1px solid #bcbcbc;padding:0px 17px 0px 17px; height:22px;}
+.btn_comment  { display:inline-block; background:#fcfcfc; border:1px solid #bcbcbc; height:22px; width: 55px;}
 .btn_re {display:inline-block; width:100px; height:62px; text-align:center; background:url('../images/btn_comment_bg.gif') no-repeat;}
 .btn_txt01 {color:#fff; font-weight:600;}
 .btn_txt02 {color:#1f1f1f; font-weight:600;}

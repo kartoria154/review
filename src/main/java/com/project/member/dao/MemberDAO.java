@@ -58,5 +58,10 @@ public class MemberDAO {
 		return flag;	
 	}
 	
+	public int membar_check(MemberTO to) {
+		int result = memberMapperInter.member_check(to);
+		return result;
+	}
+	
 
 }

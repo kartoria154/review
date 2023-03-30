@@ -2,9 +2,11 @@ package com.project.board.mapper;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.project.board.to.BoardTO;
 
@@ -18,4 +20,31 @@ public interface BoardMapperInter {
 	// 저장된 게시물 불러오기(productSeq 번호가 큰수부터 출력)
 	@Select("select productSeq, userSeq, id, nickName, productName, productCategory, productFilename, productContent, productWriteDate, productHit, productGrade, datediff(now(), productWriteDate) wgap from product_table order by productSeq desc")
 	public ArrayList<BoardTO> boardList();
+	
+	// 조회수 올리기
+	@Update("update product_table set productHit=productHit+1 where productSeq=#{productSeq}")
+	public void hitUp(BoardTO to);
+	
+	// 저장된 게시물 불러오기(productSeq를 key값으로 불러오기
+	@Select("select productSeq, userSeq, id, nickName, productName, productCategory, productFilename, productContent, productWriteDate, productHit, productGrade, datediff(now(), productWriteDate) wgap from product_table where productSeq=#{productSeq}")
+	public BoardTO boardView(BoardTO to);
+	
+	@Select("select productSeq, userSeq, id, nickName, productName, productCategory, productFilename, productContent, productWriteDate, productHit, productGrade from product_table where productSeq=#{productSeq}")
+	public BoardTO boardModify(BoardTO to);
+	
+	@Select("select productFileName from product_table where productSeq=#{productSeq}")
+	public String oldFilename(int productSeq);
+	
+	@Update("update product_table set productCategory=#{productCategory}, productName=#{productName}, productContent=#{productContent} where productSeq=#{productSeq}")
+	public int boardModify_ok_noImage(BoardTO to);
+	
+	@Update("update product_table set productCategory=#{productCategory}, productName=#{productName}, productContent=#{productContent}, productFileName=#{productFileName} where productSeq=#{productSeq}")
+	public int boardModify_ok_image(BoardTO to);
+	
+	@Select("select productSeq, userSeq, id, nickName, productName, productCategory from product_table where productSeq=#{productSeq}")
+	public BoardTO boardDelete(BoardTO to);
+	
+	@Delete("delete from product_table where productSeq=#{productSeq}")
+	public int boardDelete_ok(BoardTO to);
+	
 }

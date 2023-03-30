@@ -1,5 +1,6 @@
 package com.project.board.dao;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.mybatis.spring.annotation.MapperScan;
@@ -13,10 +14,11 @@ import com.project.board.to.BoardTO;
 @Repository
 @MapperScan("com.project.board.mapper")
 public class BoardDAO {
-
+	
+	private String uploadPath = "C:/Users/a0104/OneDrive/바탕 화면/solo/workspace/Review/src/main/webapp/upload";
+	
 	@Autowired
 	private BoardMapperInter boardMapperInter;
-	
 	
 	public int boardWrite_ok(BoardTO to) {
 		// 성공시 result는 1
@@ -67,4 +69,55 @@ public class BoardDAO {
 		return listTO;
 	}
 	
+	public BoardTO boardView(BoardTO to) {
+		boardMapperInter.hitUp(to);
+		to = boardMapperInter.boardView(to);
+		return to;
+	}
+	
+	public BoardTO boardModify(BoardTO to) {
+		to = boardMapperInter.boardModify(to);
+		return to;
+	}
+	
+	public int boardModify_ok(BoardTO to) {
+		int productSeq = to.getProductSeq();
+		String oldFilename = boardMapperInter.oldFilename(productSeq);
+		int flag = 2;
+		int result = 2;
+		if(to.getProductFileName() == null) {
+			result = boardMapperInter.boardModify_ok_noImage(to);
+		} else {
+			result = boardMapperInter.boardModify_ok_image(to);
+			File file = new File(uploadPath, oldFilename);
+			file.delete();
+		}
+		
+		if(result == 0) {
+			flag = 1;
+		} else if (result == 1) {
+			flag = 0;
+		}
+		return flag;
+	}
+	
+	public BoardTO boardDelete(BoardTO to) {
+		to = boardMapperInter.boardDelete(to);
+		return to;
+	}
+	
+	public int boardDelete_ok(BoardTO to) {
+		int productSeq = to.getProductSeq();
+		String filename = boardMapperInter.oldFilename(productSeq);
+		int flag = 2;
+		int result = boardMapperInter.boardDelete_ok(to);
+		if(result == 0) {
+			flag = 1; 
+		} else if(result == 1) {
+			flag = 0;
+			File file = new File(uploadPath, filename);
+			file.delete();
+		}
+		return flag;
+	}
 }

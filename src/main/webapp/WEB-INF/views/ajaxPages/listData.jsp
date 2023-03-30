@@ -12,7 +12,7 @@
 		<c:if test="${listTO != null}">
 			<div class="board_top">
 				<div class="bold">
-					<p>총 <span class="txt_orange">${listTO2.getTotalRecord() }</span>건 <span style="float: right;"><input type="text" name="searck"/><input type="button" value="검색"/></span></p>
+					<p>총 <span class="txt_orange">${listTO.getTotalRecord() }</span>건 <span style="float: right;"><input type="text" name="searck"/><input type="button" value="검색"/></span></p>
 				</div>
 			</div>
 			
@@ -27,7 +27,7 @@
 								<tr>
 									<td class='boardThumbWrap'>
 										<div class='boardThumb'>
-											<a href='/board/view.do?cpage=${listTO.getCpage() }'><img src="../../upload/${lists.getProductFileName() }" border="0" width="100%" height="100%"/></a>
+											<a href='/board/view.do?cpage=${listTO.getCpage() }&productSeq=${lists.getProductSeq() }'><img src="../../upload/${lists.getProductFileName() }" border="0" width="100%" height="100%"/></a>
 										</div>																		
 									</td>
 								</tr>

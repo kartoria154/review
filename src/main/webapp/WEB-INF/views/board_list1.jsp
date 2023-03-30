@@ -25,7 +25,7 @@
 				$.ajax({
 					type: 'get',
 					url: '/board/list.data',	 
-					async:false,
+					//async:false,
 					dataType: 'html',
 					success: function(htmlData) {
 						$("#boardList").html(htmlData);
@@ -42,7 +42,7 @@
 		<div class="contents1"> 
 			<div class="con_title"> 
 				<span style="margin: 0px; text-align: left">
-					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 게시물 &gt; <strong>상품 게시판</strong>
+					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 게시물 &gt; <strong>목록</strong>
 				</span>
 				<span style="float: right;">
 					<c:choose>

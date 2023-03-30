@@ -67,7 +67,7 @@
 								<th>카테고리 / 상품명</th>
 								<td colspan="3">
 									<select name="productCategory">
-									    <option value="">카테고리</option>
+									    <option value="">--카테고리--</option>
 									    <option value="콜라">콜라</option>
 									    <option value="사이다">사이다</option>
 									</select>
