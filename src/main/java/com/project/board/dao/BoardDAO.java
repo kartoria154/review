@@ -89,8 +89,13 @@ public class BoardDAO {
 			result = boardMapperInter.boardModify_ok_noImage(to);
 		} else {
 			result = boardMapperInter.boardModify_ok_image(to);
-			File file = new File(uploadPath, oldFilename);
-			file.delete();
+			if(result == 0) {
+				File file = new File(uploadPath, to.getProductFileName());
+				file.delete();
+			} else if (result == 1) {
+				File file = new File(uploadPath, oldFilename);
+				file.delete();
+			}
 		}
 		
 		if(result == 0) {

@@ -4,15 +4,22 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
 	<body>
 		<c:if test="${listTO != null}">
 			<div class="board_top">
 				<div class="bold">
-					<p>총 <span class="txt_orange">${listTO.getTotalRecord() }</span>건 <span style="float: right;"><input type="text" name="searck"/><input type="button" value="검색"/></span></p>
+					<p>총 <span class="txt_orange">${listTO.getTotalRecord() }</span>건 <span style="float: right;">
+						<select name="productCategory" id="productCategorySearch">
+						    <option value="" selected="selected">--전체--</option>
+						    <option value="콜라">콜라</option>
+						    <option value="사이다">사이다</option>
+						</select>
+						<input type="text" name="productNameSearch"/><input type="button" value="검색"/></span>
+					</p>
 				</div>
 			</div>
 			

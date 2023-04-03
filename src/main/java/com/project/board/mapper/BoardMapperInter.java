@@ -47,4 +47,7 @@ public interface BoardMapperInter {
 	@Delete("delete from product_table where productSeq=#{productSeq}")
 	public int boardDelete_ok(BoardTO to);
 	
+	@Update("update product_table set productGrade=#{avg} where productSeq=#{seq}")
+	void gradeAVGUdate(double avg, int seq);
+	
 }

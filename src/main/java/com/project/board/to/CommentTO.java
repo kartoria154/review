@@ -18,7 +18,7 @@ public class CommentTO {
 	private int cmtGrps;
 	private int cmtGrpl;
 	private String cmtContent;
-	private int cmtGrade;
+	private double cmtGrade;
 	private Date cmtRegDate;
 	
 }

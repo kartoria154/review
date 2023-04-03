@@ -10,6 +10,7 @@
 		<title>Insert title here</title>
 		<link rel="stylesheet" type="text/css" href="../../css/board_write.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 		<script type="text/javascript">
 			/* 중복 체크 확인 */
 			var id_check_num = 0;
@@ -17,8 +18,12 @@
 			var id_value = "";
 			/* 비밀번호 확인 */
 			var pw_check_num = 0;
+			
+			var password_rule_num = 0;
 			window.onload = function() {
+				/* document : 현재 문서를 의미함. 작성되고 있는 문서를 뜻함. */
 				document.getElementById('joinBtn').onclick = function(){
+					console.log("실행확인")
 					if( document.joinForm.info.checked == false ) {		/* 개인정보 제공 동의 */
 						alert( '동의하셔야 합니다.' );
 						return false;
@@ -27,12 +32,16 @@
 						alert('ID를 입력하십시오.')
 						return false;
 					}
-					if(id_check_num != 1 && id_check_value == document.joinForm.id.value.trim()){	/* id중복검사 여부와 검사 후 변경했는지 판단 */
+					if(id_check_num != 1 || id_value == document.joinForm.id.value.trim()){	/* id중복검사 여부와 검사 후 변경했는지 판단 */
 						alert('ID 중복검사를 하십시오.')
 						return false;
 					}
 					if(document.joinForm.password.value.trim() == '') {	/* 비일번호 입력 확인 */
 						alert('비밀번호를 입력하십시오.')
+						return false;
+					}
+					if(password_rule_num != 1) {	/* 비일번호 입력 형식 확인 */
+						alert('비밀번호를 형식에 맞게 다시 입력하십시오.')
 						return false;
 					}
 					if(document.joinForm.password_check.value.trim() == '') {	/* 비일번호 재확인 입력 확인 */
@@ -48,12 +57,18 @@
 						return false;
 					}
 					document.joinForm.submit();
+					
+					
 				};
 				document.getElementById('id_check').onclick = function(){
 					/* console.log("중복검사 호출");
 					console.log("아이디 입력 값 : " + joinForm.id.value); */
+					var reg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 					if(document.joinForm.id.value.trim() == '') {
 						alert('ID를 입력하십시오.')
+						return false;
+					} else if (reg.test(document.joinForm.id.value.trim())){
+						alert('이메일 형식에 맞게 입력하십시오.')
 						return false;
 					} else {
 						$.ajax({
@@ -64,7 +79,7 @@
 							dataType : "text",	/* text, xml, html, script, json, jsonp 가능 */
 							//정상적인 통신을 했다면 function은 백엔드 단에서 데이터를 처리.
 							success : function(data){	
-								console.log(data);
+								//console.log(data);
 								if(data == "1"){
 									alert("이 아이디는 사용 가능합니다.");
 									id_check_num = 1;
@@ -80,9 +95,29 @@
 						});
 					};
 				}
+				
+				document.getElementById('password').onkeyup = function() {
+					//var reg = /^[A-Za-z0-9`~!@#\$%\^&\*\(\)\{\}\[\]\-_=\+\\|;:'"<>,\./\?]{8,20}$/;
+					var reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/;
+					var password = document.getElementById('password').value;
+					var password_rule = document.getElementById('password_rule');				//확인 메세지
+					var correctColor = "#00ff00";	//맞았을 때 출력되는 색깔.
+					var wrongColor ="#ff0000";	//틀렸을 때 출력되는 색깔
+					//console.log(password.search(/\s/) != -1);
+					if (reg.test(password)) {
+						password_rule.style.color = correctColor;
+						password_rule.innerHTML ="사용 가능한 비밀번호 입니다.";
+						password_rule_num = 1;
+					} else{
+						password_rule.style.color = wrongColor;
+						password_rule.innerHTML = "형식에 맞지 않습니다. 영문자, 숫자, 특수문자가 하나 이상씩 포함하고 8자 이상 입력하여야 합니다."; 
+						password_rule_num = 0;
+					}
+				};
+				
 				document.getElementById('password_check').onkeyup = function() {
 					/* 비밀번호, 비밀번호 확인 입력창에 입력된 값을 비교해서 같다면 비밀번호 일치, 그렇지 않으면 불일치 라는 텍스트 출력.*/
-					/* document : 현재 문서를 의미함. 작성되고 있는 문서를 뜻함. */
+					
 					var password = document.getElementById('password');					//비밀번호 
 					var passwordConfirm = document.getElementById('password_check');	//비밀번호 확인 값
 					var confrimMsg = document.getElementById('confirmMsg');				//확인 메세지
@@ -106,7 +141,7 @@
 		<div class="contents1"> 
 			<div class="con_title"> 
 				<p style="margin: 0px; text-align: right">
-					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 커뮤니티 &gt; <strong>여행지리뷰</strong>
+					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; <strong>회원가입</strong>
 				</p>
 			</div> 
 			<form action="./joinMember_ok.do" method="post" name="joinForm">
@@ -123,11 +158,17 @@
 							</tr>
 							<tr>
 								<th>비밀번호</th>
-								<td colspan="3"><input type="password" name="password" id="password" value="" class="board_view_input" /></td>
+								<td colspan="3">
+									<input type="password" name="password" id="password" value="" class="board_view_input" /><br/>
+									<span id="password_rule"></span>
+								</td>
 							</tr>
 							<tr>
 								<th>비밀번호 확인</th>
-								<td colspan="3"><input type="password" name="password_check" id="password_check" value="" class="board_view_input"/><span id ="confirmMsg"></span></td>
+								<td colspan="3">
+									<input type="password" name="password_check" id="password_check" value="" class="board_view_input"/>
+									<span id ="confirmMsg"></span>
+								</td>
 							</tr>
 							<tr>
 								<th>이름</th>
@@ -163,10 +204,10 @@
 					</div>
 					<div class="btn_area">
 						<div class="align_left">			
-							<input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='board_list1.jsp'" />
+							<input type="button" value="홈" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/board/list.do'" />
 						</div>
 						<div class="align_right">			
-							<input type="button" value="쓰기" id="joinBtn" class="btn_write btn_txt01" style="cursor: pointer;" />					
+							<input type="button" value="가입하기" id="joinBtn" class="btn_write btn_txt01" style="cursor: pointer;" />					
 						</div>	
 					</div>
 				</div>

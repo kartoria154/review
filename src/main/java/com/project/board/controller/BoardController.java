@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -133,6 +134,18 @@ public class BoardController {
 		return mav;
 	}
 	
+
+	@RequestMapping(value = "/board/cmtContent.data")
+	public ModelAndView boardCmtContent(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		CommentTO to = new CommentTO();
+		to.setCmtSeq(Integer.parseInt(request.getParameter("cSeq")));
+		int cmtMaxGrpl = cmtDao.cmtMaxGrpl(Integer.parseInt(request.getParameter("productSeq")));
+		mav.addObject("cmtMaxGrpl", cmtMaxGrpl);
+		mav.setViewName("/ajaxPages/cmtContent");
+		return mav;
+	}
+	
 	@RequestMapping(value = "/board/modify.do")
 	public ModelAndView boardModify(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
@@ -218,4 +231,77 @@ public class BoardController {
 		mav.setViewName("board_delete1_ok");
 		return mav;
 	}
+	
+	@RequestMapping(value = "/board/cmtParentWrite_ok.do")
+	public JSONObject boardCmtParentWrite_ok(HttpServletRequest request, HttpServletResponse response) {
+		CommentTO to = new CommentTO();
+		HttpSession session = request.getSession();
+		to.setUserSeq((int)session.getAttribute("userSeq"));
+		to.setId((String)session.getAttribute("id"));
+		to.setNickName((String)session.getAttribute("nickName"));
+		to.setCmtContent(request.getParameter("cmtContent"));
+		to.setCmtGrade(Double.parseDouble(request.getParameter("cmtGrade")));
+		to.setProductSeq(Integer.parseInt(request.getParameter("productSeq")));
+		int flag = cmtDao.cmtParentWrite_ok(to);
+		JSONObject result = new JSONObject();
+		result.put("flag", flag);
+		return result;
+	}
+	
+	@RequestMapping(value = "/board/cmtReplyWrite_ok.do")
+	public JSONObject boardCmtReplyWrite_ok(HttpServletRequest request, HttpServletResponse response) {
+		CommentTO to = new CommentTO();
+		HttpSession session = request.getSession();
+		to.setUserSeq((int)session.getAttribute("userSeq"));
+		to.setId((String)session.getAttribute("id"));
+		to.setNickName((String)session.getAttribute("nickName"));
+		to.setCmtContent(request.getParameter("cmtContent"));
+		to.setProductSeq(Integer.parseInt(request.getParameter("productSeq")));
+		int pSeq = Integer.parseInt(request.getParameter("pSeq"));
+		int flag = cmtDao.cmtReplyWrite_ok(to, pSeq);
+		JSONObject result = new JSONObject();
+		result.put("flag", flag);
+		return result;
+	}
+	
+	@RequestMapping(value = "/board/cmtReplyModify_ok.do")
+	public JSONObject boardCmtReplyModify_ok(HttpServletRequest request, HttpServletResponse response) {
+		CommentTO to = new CommentTO();
+		to.setCmtContent(request.getParameter("cmtContent"));
+		to.setCmtSeq(Integer.parseInt(request.getParameter("cSeq")));
+		
+		int flag;
+		//System.out.println(request.getParameter("cmtGrade") );
+		if(request.getParameter("cmtGrade") != null) {
+			to.setCmtGrade(Double.parseDouble(request.getParameter("cmtGrade")));
+			int productSeq = Integer.parseInt(request.getParameter("productSeq"));
+			flag = cmtDao.cmtParentModify_ok(to, productSeq);
+		} else {
+			flag = cmtDao.cmtReplyModify_ok(to);
+		}
+		JSONObject result = new JSONObject();
+		result.put("flag", flag);
+		return result;
+	}
+	
+	@RequestMapping(value = "/board/cmtReplyDelete_ok.do")
+	public JSONObject boardCmtReplyDelete_ok(HttpServletRequest request, HttpServletResponse response) {
+		CommentTO to = new CommentTO();
+		MemberTO memTO = new MemberTO();
+		HttpSession session = request.getSession();
+		memTO.setId((String)session.getAttribute("id"));
+		memTO.setPassword(request.getParameter("password"));
+		int memberCK = memDao.membar_check(memTO);
+		int flag = 2;
+		if(memberCK == 1) {
+			to.setCmtSeq(Integer.parseInt(request.getParameter("cSeq")));
+			int productSeq = Integer.parseInt(request.getParameter("productSeq"));
+			flag = cmtDao.cmtReplyDelete_ok(to, productSeq);
+		}
+		JSONObject result = new JSONObject();
+		result.put("flag", flag);
+		return result;
+	}
+	
+	
 }
