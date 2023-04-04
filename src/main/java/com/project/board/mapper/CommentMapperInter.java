@@ -2,12 +2,14 @@ package com.project.board.mapper;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.project.board.to.CommentTO;
+
 
 @Mapper
 public interface CommentMapperInter {
@@ -45,6 +47,9 @@ public interface CommentMapperInter {
 	
 	@Update("update comment_table set userSeq=7, id='삭제된 글입니다', nickName='삭제된 글입니다', cmtContent='삭제된 글입니다', cmtGrade=0 where cmtSeq=#{cmtSeq}")
 	int cmtReplyDelete_ok(CommentTO to);
+	
+	@Delete("delete from comment_table where productSeq=#{productSeq}")
+	void boardDeleteComment(int productSeq);
 }
 
 /*

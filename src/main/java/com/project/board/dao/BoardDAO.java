@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.project.board.mapper.BoardMapperInter;
+import com.project.board.mapper.CommentMapperInter;
 import com.project.board.to.BoardListTO;
 import com.project.board.to.BoardTO;
+
 
 @Repository
 @MapperScan("com.project.board.mapper")
@@ -19,6 +21,9 @@ public class BoardDAO {
 	
 	@Autowired
 	private BoardMapperInter boardMapperInter;
+	
+	@Autowired
+	private CommentMapperInter commentMapperInter;
 	
 	public int boardWrite_ok(BoardTO to) {
 		// 성공시 result는 1
@@ -31,9 +36,25 @@ public class BoardDAO {
 		return flag;
 	}
 	
-	public BoardListTO boardList(BoardListTO listTO){
+	public BoardListTO boardList(BoardListTO listTO, BoardTO bTo, int searchData){
+		ArrayList<BoardTO> boardList = new ArrayList<BoardTO>();
 		// db에 조회 후 데이터 저장
-		ArrayList<BoardTO> boardList = boardMapperInter.boardList();
+		if(searchData == 3) {
+			bTo.setProductName("%"+bTo.getProductName()+"%");
+			boardList = boardMapperInter.boardNoAllSearchList(bTo);
+		} else if(searchData == 2) {
+			boardList = boardMapperInter.boardNoAllNoSearchList(bTo);
+		} else if(searchData == 1) {
+			bTo.setProductName("%"+bTo.getProductName()+"%");
+			boardList = boardMapperInter.boardAllSearchList(bTo);
+		} else if(searchData == 4) {
+			boardList = boardMapperInter.boardHitList();
+		} else if(searchData == 5) {
+			boardList = boardMapperInter.boardGradeList();
+		} else {
+			boardList = boardMapperInter.boardDefaultList();
+		}
+		
 		// 데이터의 총 갯수
 		listTO.setTotalRecord(boardList.size());
 		// 전체 페이지 = 데이터의 총 갯수 / 한 페이지에 보일 게시물 갯수 + 1 (소수점은 내림)
@@ -67,6 +88,11 @@ public class BoardDAO {
 		}
 		
 		return listTO;
+	}
+	
+	public ArrayList<String> productCategory(){
+		ArrayList<String> categoryList = boardMapperInter.productCategory();
+		return categoryList;
 	}
 	
 	public BoardTO boardView(BoardTO to) {
@@ -115,6 +141,7 @@ public class BoardDAO {
 		int productSeq = to.getProductSeq();
 		String filename = boardMapperInter.oldFilename(productSeq);
 		int flag = 2;
+		commentMapperInter.boardDeleteComment(productSeq);
 		int result = boardMapperInter.boardDelete_ok(to);
 		if(result == 0) {
 			flag = 1; 

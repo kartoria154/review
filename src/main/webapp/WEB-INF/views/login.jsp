@@ -28,7 +28,7 @@
 		<div class="contents1"> 
 			<div class="con_title"> 
 				<p style="margin: 0px; text-align: right">
-					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 커뮤니티 &gt; <strong>여행지리뷰</strong>
+					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; <strong>로그인</strong>
 				</p>
 			</div> 
 			<form action="/login_ok.do" method="post" name="loginForm">
@@ -48,12 +48,12 @@
 		
 					<div class="btn_area">
 						<div class="align_left">			
-							<input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='board_list1.jsp'" />
+							<input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/board/list.do" />
 						</div>
 						<div class="align_right">	
-							<input type="button" value="ID찾기" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='member/memberJoin.do'" />		
-							<input type="button" value="PW찾기" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='member/memberJoin.do'" />		
-							<input type="button" value="회원가입" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='member/joinMember.do'" />		
+							<!-- <input type="button" value="ID찾기" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='member/memberJoin.do'" />		
+							<input type="button" value="PW찾기" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='member/memberJoin.do'" />	 -->	
+							<input type="button" value="회원가입" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/member/joinMember.do'" />		
 							<input type="button" id="loginBtn" value="로그인" class="btn_write btn_txt01" style="cursor: pointer;" />					
 						</div>	
 					</div>

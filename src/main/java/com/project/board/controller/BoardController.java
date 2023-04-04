@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,13 +54,69 @@ public class BoardController {
 		if(request.getParameter("cpage") != null && !request.getParameter("cpage").equals("")) {
 			cpage = Integer.parseInt(request.getParameter("cpage"));
 		}
-		
+		int searchData = 0;
+		int listNum = 0;
+		if(request.getParameter("listNum") != null && !request.getParameter("listNum").equals("")) {
+			listNum =  Integer.parseInt(request.getParameter("listNum"));
+		}
+		if(listNum == 1) {
+			searchData = 4;
+		} else if(listNum == 2) {
+			searchData = 5;
+		}
 		BoardListTO listTO = new BoardListTO();
+		BoardTO bTo = new BoardTO();
 		listTO.setCpage(cpage);
-		listTO = dao.boardList(listTO);
+		listTO = dao.boardList(listTO, bTo, searchData);
 		mav.addObject("listTO", listTO);
 		mav.setViewName("/ajaxPages/listData");
 		return mav;
+	}
+	
+	@RequestMapping(value = "/board/searchList.data")
+	public ModelAndView searchListListData(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		int cpage = 1;
+		if(request.getParameter("cpage") != null && !request.getParameter("cpage").equals("")) {
+			cpage = Integer.parseInt(request.getParameter("cpage"));
+		}
+		BoardListTO listTO = new BoardListTO();
+		BoardTO bTo = new BoardTO();
+		int searchData = 0;
+		if(!request.getParameter("productCategory").equals("all")) {
+			if(!request.getParameter("productName").equals("") && request.getParameter("productName") != null) {
+				// 전체 카테고리가 아니고 검색어가 있을시
+				searchData = 3;
+				bTo.setProductCategory(request.getParameter("productCategory"));
+				bTo.setProductName(request.getParameter("productName"));
+			} else {
+				// 전체 카테고리가 아니고 검색어가 없을시
+				searchData = 2;
+				bTo.setProductCategory(request.getParameter("productCategory"));
+			}
+		} else {
+			if(!request.getParameter("productName").equals("") && request.getParameter("productName") != null) {
+				// 전체 카테고리에서 검색어가 있을시
+				searchData = 1;
+				bTo.setProductName(request.getParameter("productName"));
+			}
+		}
+		listTO.setCpage(cpage);
+		listTO = dao.boardList(listTO, bTo, searchData);
+		mav.addObject("listTO", listTO);
+		mav.setViewName("/ajaxPages/listData");
+		return mav;
+	}
+	
+	// 카테고리 메서드
+	@RequestMapping(value = "/board/productCategory.data")
+	public JSONArray productCategory(HttpServletRequest request, HttpServletResponse response) {
+		ArrayList<String> Lists = dao.productCategory();
+		JSONArray categoryList = new JSONArray();
+		for(String str : Lists) {
+			categoryList.add(str);
+		}
+		return categoryList;
 	}
 	
 	// write 페이지 호출 메서드

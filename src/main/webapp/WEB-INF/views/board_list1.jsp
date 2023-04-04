@@ -7,7 +7,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>Insert title here</title>
+		<title>게시물 목록(main)</title>
 		<link rel="stylesheet" type="text/css" href="../../css/board_list.css">
 		<style type="text/css">
 			.board_pagetab { text-align: center; }
@@ -18,14 +18,16 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script type="text/javascript">
 			$( document ).ready( function() {
-				listServer();
+				listServer(0);
 			});
 			// listData 호출
-			const listServer = function() {
+			const listServer = function(listNum) {
+				//console.log(listNum);
 				$.ajax({
 					type: 'get',
-					url: '/board/list.data',	 
-					//async:false,
+					url: '/board/list.data',
+					data: {"listNum": listNum},
+					async:false,
 					dataType: 'html',
 					success: function(htmlData) {
 						$("#boardList").html(htmlData);
@@ -35,6 +37,28 @@
 					}
 				});
 			}
+			
+			function productSearch(){
+				var productCategory = document.getElementById( 'productCategorySearch' ).value.trim();
+				var productName = document.getElementById('productNameSearch').value.trim();
+				$.ajax({
+					type: 'get',
+					url: '/board/searchList.data',	 
+					async:false,
+					data: {
+						"productCategory": productCategory,
+						"productName": productName
+					},
+					dataType: 'html',
+					success: function(htmlData) {
+						$("#boardList").html(htmlData);
+					},
+					error: function(err) {
+						alert('에러' + err.status);
+					}
+				});
+			}
+			
 		</script>
 	</head>
 	

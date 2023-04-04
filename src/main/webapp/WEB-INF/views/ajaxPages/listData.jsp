@@ -7,6 +7,32 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Insert title here</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			$( document ).ready( function() {
+				productCategory();
+				
+			});	
+			var productCategory = function(){
+				$.ajax({
+					type: 'get',
+					url: '/board/productCategory.data',
+					async:false,
+					dataType: 'json',
+					success: function(data){
+						//console.log(data[1]);
+						let categoryHtml = '<option value="all" selected="selected">--전체--</option>';
+						for(let i = 0; i < data.length; i++){
+							categoryHtml += '<option value="'+data[i]+'">'+data[i]+'</option>';
+						};
+						$("#productCategorySearch").html(categoryHtml);
+					},
+					error: function(err) {
+						alert('에러' + err.status);
+					}
+				});
+			}
+		</script>
 	</head>
 	<body>
 		<c:if test="${listTO != null}">
@@ -14,15 +40,17 @@
 				<div class="bold">
 					<p>총 <span class="txt_orange">${listTO.getTotalRecord() }</span>건 <span style="float: right;">
 						<select name="productCategory" id="productCategorySearch">
-						    <option value="" selected="selected">--전체--</option>
+						    <!-- <option value="all" selected="selected">--전체--</option>
 						    <option value="콜라">콜라</option>
-						    <option value="사이다">사이다</option>
+						    <option value="사이다">사이다</option> -->
 						</select>
-						<input type="text" name="productNameSearch"/><input type="button" value="검색"/></span>
+						<input type="text" name="productNameSearch" id="productNameSearch"/><input type="button" value="검색" onclick="productSearch()"/></span>
 					</p>
 				</div>
 			</div>
-			
+			<div style="float: right;">
+				<span><input id="newProducts" type="button" value="최신순" onclick="listServer(0)"/></span> | <span><input id="hitProducts" type="button" value="조회수순" onclick="listServer(1)"/></span> | <span><input id="gradeProducts" type="button" value="평점순" onclick="listServer(2)"/></span>
+			</div>
 			<table class="board_list">
 				<c:forEach var="lists" items="${listTO.getBoardLists() }" varStatus="status">
 					<c:if test="${status.index % 5 == 0}">

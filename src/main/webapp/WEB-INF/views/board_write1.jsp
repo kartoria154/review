@@ -18,7 +18,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>Insert title here</title>
+		<title>새로운 글쓰기</title>
 		<link rel="stylesheet" type="text/css" href="../../css/board_write.css">
 		<script type="text/javascript">
 			window.onload = function() {
@@ -51,7 +51,7 @@
 		<div class="contents1"> 
 			<div class="con_title"> 
 				<p style="margin: 0px; text-align: right">
-					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 게시판 &gt; <strong>게시물 작성</strong>
+					<img style="vertical-align: middle" alt="" src="../../images/home_icon.gif" /> &gt; 게시물 &gt; 목록 &gt; <strong>게시물 작성</strong>
 				</p>
 			</div> 
 		
@@ -66,11 +66,12 @@
 							<tr>
 								<th>카테고리 / 상품명</th>
 								<td colspan="3">
-									<select name="productCategory">
+									<!-- <select name="productCategory">
 									    <option value="">--카테고리--</option>
 									    <option value="콜라">콜라</option>
 									    <option value="사이다">사이다</option>
-									</select>
+									</select> -->
+									<input type="text" name="productCategory" value="" class="board_view_input" /> / 
 									<input type="text" name="productName" value="" class="board_view_input" />
 								</td>
 							</tr>
