@@ -39,10 +39,30 @@ public class BoardController {
 	private MemberDAO memDao;
 	
 	// list 페이지 호출 메서드
-	@RequestMapping(value = "board/list.do")
+	@RequestMapping(value = "/board/list.do")
 	public ModelAndView boardList(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("board_list1");
+		int cpage = 1;
+		if(request.getParameter("cpage") != null && !request.getParameter("cpage").equals("")) {
+			cpage = Integer.parseInt(request.getParameter("cpage"));
+		}
+		int searchData = 0;
+		int listNum = 0;
+		if(request.getParameter("listNum") != null && !request.getParameter("listNum").equals("")) {
+			listNum =  Integer.parseInt(request.getParameter("listNum"));
+		}
+		if(listNum == 1) {
+			searchData = 4;
+		} else if(listNum == 2) {
+			searchData = 5;
+		}
+		//System.out.println(cpage);
+		BoardListTO listTO = new BoardListTO();
+		BoardTO bTo = new BoardTO();
+		listTO.setCpage(cpage);
+		listTO = dao.boardList(listTO, bTo, searchData);
+		mav.addObject("listTO", listTO);
+		mav.setViewName("/board_list2");
 		return mav;
 	}
 	
@@ -64,6 +84,7 @@ public class BoardController {
 		} else if(listNum == 2) {
 			searchData = 5;
 		}
+		//System.out.println(cpage);
 		BoardListTO listTO = new BoardListTO();
 		BoardTO bTo = new BoardTO();
 		listTO.setCpage(cpage);
@@ -73,8 +94,8 @@ public class BoardController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/board/searchList.data")
-	public ModelAndView searchListListData(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/board/searchList.do")
+	public ModelAndView searchListData(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
 		int cpage = 1;
 		if(request.getParameter("cpage") != null && !request.getParameter("cpage").equals("")) {
@@ -84,27 +105,27 @@ public class BoardController {
 		BoardTO bTo = new BoardTO();
 		int searchData = 0;
 		if(!request.getParameter("productCategory").equals("all")) {
-			if(!request.getParameter("productName").equals("") && request.getParameter("productName") != null) {
+			if(request.getParameter("productNameSearch") != null && !request.getParameter("productNameSearch").equals("")) {
 				// 전체 카테고리가 아니고 검색어가 있을시
 				searchData = 3;
 				bTo.setProductCategory(request.getParameter("productCategory"));
-				bTo.setProductName(request.getParameter("productName"));
+				bTo.setProductName(request.getParameter("productNameSearch"));
 			} else {
 				// 전체 카테고리가 아니고 검색어가 없을시
 				searchData = 2;
 				bTo.setProductCategory(request.getParameter("productCategory"));
 			}
 		} else {
-			if(!request.getParameter("productName").equals("") && request.getParameter("productName") != null) {
+			if(!request.getParameter("productNameSearch").equals("") && request.getParameter("productNameSearch") != null) {
 				// 전체 카테고리에서 검색어가 있을시
 				searchData = 1;
-				bTo.setProductName(request.getParameter("productName"));
+				bTo.setProductName(request.getParameter("productNameSearch"));
 			}
 		}
 		listTO.setCpage(cpage);
 		listTO = dao.boardList(listTO, bTo, searchData);
 		mav.addObject("listTO", listTO);
-		mav.setViewName("/ajaxPages/listData");
+		mav.setViewName("/board_list2");
 		return mav;
 	}
 	
@@ -120,7 +141,7 @@ public class BoardController {
 	}
 	
 	// write 페이지 호출 메서드
-	@RequestMapping(value = "board/write.do")
+	@RequestMapping(value = "/board/write.do")
 	public ModelAndView boardWrite(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("board_write1");
@@ -144,10 +165,10 @@ public class BoardController {
 		// 사진 파일이 존재하면 사진을 지정 경로에 업로드하고 사진명을 db에 저장 
 		if(!upload.isEmpty()) {
 			try {
-				// 사진 파일의 확장자 명
-				String extention = upload.getOriginalFilename().substring(upload.getOriginalFilename().indexOf("."));
+				// [0]: 사진파일명 [1]:사진 파일의 확장자 명
+				String[] fileName = upload.getOriginalFilename().split(".");
 									// 파일의 중복을 피하기 위해 UUID 사용
-				to.setProductFileName(UUID.randomUUID().toString() + extention);
+				to.setProductFileName(fileName[0] + UUID.randomUUID().toString() + "." + fileName);
 				// 파일 업로드
 				upload.transferTo(new File(to.getProductFileName()));
 			} catch (IllegalStateException e) {
@@ -172,34 +193,6 @@ public class BoardController {
 		mav.addObject("to", to);
 		mav.addObject("cpage", request.getParameter("cpage"));
 		mav.setViewName("board_view1");
-		return mav;
-	}
-	
-	// list 페이지의 게시물 정보를 부르는 메서드
-	@RequestMapping(value = "/board/cmt.data")
-	public ModelAndView boardCmtData(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = new ModelAndView();
-		CommentTO to = new CommentTO();
-		to.setProductSeq(Integer.parseInt(request.getParameter("productSeq")));
-		ArrayList<CommentTO> cmtList = cmtDao.commentList(to);
-		if(cmtList.size() != 0) {
-			int cmtMaxGrpl = cmtDao.cmtMaxGrpl(Integer.parseInt(request.getParameter("productSeq")));
-			mav.addObject("cmtMaxGrpl", cmtMaxGrpl);
-		}
-		mav.addObject("cmtList", cmtList);
-		mav.setViewName("/ajaxPages/cmtData");
-		return mav;
-	}
-	
-
-	@RequestMapping(value = "/board/cmtContent.data")
-	public ModelAndView boardCmtContent(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView mav = new ModelAndView();
-		CommentTO to = new CommentTO();
-		to.setCmtSeq(Integer.parseInt(request.getParameter("cSeq")));
-		int cmtMaxGrpl = cmtDao.cmtMaxGrpl(Integer.parseInt(request.getParameter("productSeq")));
-		mav.addObject("cmtMaxGrpl", cmtMaxGrpl);
-		mav.setViewName("/ajaxPages/cmtContent");
 		return mav;
 	}
 	
@@ -230,12 +223,13 @@ public class BoardController {
 			to.setProductName(request.getParameter("productName"));
 			to.setProductCategory(request.getParameter("productCategory"));
 			to.setProductContent(request.getParameter("productContent"));
+			// 사진 파일을 업로드 했을 때 파일 업로드
 			if(!upload.isEmpty()) {
 				try {
-					// 사진 파일의 확장자 명
-					String extention = upload.getOriginalFilename().substring(upload.getOriginalFilename().indexOf("."));
+					// [0]: 사진파일명 [1]:사진 파일의 확장자 명
+					String[] fileName = upload.getOriginalFilename().split(".");
 										// 파일의 중복을 피하기 위해 UUID 사용
-					to.setProductFileName(UUID.randomUUID().toString() + extention);
+					to.setProductFileName(fileName[0] + UUID.randomUUID().toString() + "." + fileName);
 					// 파일 업로드
 					upload.transferTo(new File(to.getProductFileName()));
 				} catch (IllegalStateException e) {
@@ -245,8 +239,6 @@ public class BoardController {
 				}
 			}
 			flag = dao.boardModify_ok(to);
-		} else if(memberCK == 0) {
-			flag = 3;
 		}
 		mav.addObject("flag", flag);
 		mav.addObject("cpage", request.getParameter("cpage"));
@@ -286,6 +278,24 @@ public class BoardController {
 		}
 		mav.addObject("flag", flag);
 		mav.setViewName("board_delete1_ok");
+		return mav;
+	}
+	
+	// 댓글 목록을 부르기 위한 메서드
+	@RequestMapping(value = "/board/cmt.data")
+	public ModelAndView boardCmtData(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		CommentTO to = new CommentTO();
+		// 게시물의 번호로 DB에서 댓글 목록 가져옴
+		to.setProductSeq(Integer.parseInt(request.getParameter("productSeq")));
+		ArrayList<CommentTO> cmtList = cmtDao.commentList(to);
+		if(cmtList.size() != 0) {
+			// 대댓글을 표현하기 위한 변수
+			int cmtMaxGrpl = cmtDao.cmtMaxGrpl(Integer.parseInt(request.getParameter("productSeq")));
+			mav.addObject("cmtMaxGrpl", cmtMaxGrpl);
+		}
+		mav.addObject("cmtList", cmtList);
+		mav.setViewName("/ajaxPages/cmtData");
 		return mav;
 	}
 	

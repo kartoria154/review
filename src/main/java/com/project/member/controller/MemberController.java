@@ -19,7 +19,7 @@ public class MemberController {
 	private MemberDAO dao;
 	
 	//로그인 창으로 이동
-	@RequestMapping(value = "login.do")
+	@RequestMapping(value = "/login.do")
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response) {
 		 ModelAndView mav = new ModelAndView();
 		 mav.setViewName("login");
@@ -27,7 +27,7 @@ public class MemberController {
 	}
 	
 	//로그인 창에서 입력 받은 데이터 DAO로 주고 받은 값이 있으면 session에 저장
-	@RequestMapping(value = "login_ok.do")
+	@RequestMapping(value = "/login_ok.do")
 	public ModelAndView login_ok(HttpServletRequest request, HttpServletResponse response) {
 		 ModelAndView mav = new ModelAndView();
 		 MemberTO to = new MemberTO();
@@ -53,7 +53,7 @@ public class MemberController {
 	}
 	
 	// 회원가입 페이지로 이동
-	@RequestMapping(value = "member/joinMember.do")
+	@RequestMapping(value = "/member/joinMember.do")
 	public ModelAndView joinMember(HttpServletRequest request, HttpServletResponse response) {
 		 ModelAndView mav = new ModelAndView();
 		 mav.setViewName("joinMember");
@@ -61,7 +61,7 @@ public class MemberController {
 	}
 
 	// id 중복 검사
-	@RequestMapping(value ="member/id_check.do")
+	@RequestMapping(value ="/member/id_check.do")
 	public int id_check(HttpServletRequest request, HttpServletResponse response) {
 		MemberTO to = new MemberTO();
 		to.setId(request.getParameter("id"));
@@ -71,7 +71,7 @@ public class MemberController {
 	}	
 		
 	// 회원가입 실행 controller
-	@RequestMapping(value = "member/joinMember_ok.do")
+	@RequestMapping(value = "/member/joinMember_ok.do")
 	public ModelAndView joinMember_ok(HttpServletRequest request, HttpServletResponse response) {
 		 ModelAndView mav = new ModelAndView();
 		 MemberTO to = new MemberTO();
@@ -85,7 +85,7 @@ public class MemberController {
 		 return mav;
 	}
 	
-	@RequestMapping(value = "logout_ok.do")
+	@RequestMapping(value = "/logout_ok.do")
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
 		 ModelAndView mav = new ModelAndView();
 		 mav.setViewName("logout_ok");

@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!-- cmtList, cmtMaxGrpl -->
 <!DOCTYPE html>
 <html>
 	<body>
@@ -54,22 +53,24 @@
 				</c:forEach>
 			</table>
 		</c:if>
-		<form action="" method="post" name="pcfrm">
-			<table>
-				<tr>
-					<td width="86%" class="bg01">
-						<textarea name="ccontent" cols="" rows="" class="coment_input_text"></textarea>
-					</td>
-					<td width="8%" class="bg01">
-						상품 점수 <br/>
-						<input size="8" type="text" name="pcgrade" value="" /><br/>
-						0 ~ 5.0
-					</td>
-					<td width="6%" align="right" class="bg01">
-						<input type="button" id="pcbtn" value="댓글등록" class="btn_re btn_txt01" onclick="cmtParentWrite()" />
-					</td>
-				</tr>
-			</table>
-		</form>
+		<c:if test="${sessionScope.userSeq != null }">
+			<form action="" method="post" name="pcfrm">
+				<table>
+					<tr>
+						<td width="86%" class="bg01">
+							<textarea name="ccontent" cols="" rows="" class="coment_input_text"></textarea>
+						</td>
+						<td width="8%" class="bg01">
+							상품 점수 <br/>
+							<input size="8" type="text" name="pcgrade" value="" /><br/>
+							0 ~ 5.0
+						</td>
+						<td width="6%" align="right" class="bg01">
+							<input type="button" id="pcbtn" value="댓글등록" class="btn_re btn_txt01" onclick="cmtParentWrite()" />
+						</td>
+					</tr>
+				</table>
+			</form>
+		</c:if>
 	</body>
 </html>

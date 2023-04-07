@@ -48,7 +48,7 @@
 		
 					<div class="btn_area">
 						<div class="align_left">			
-							<input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/board/list.do" />
+							<input type="button" value="홈" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/board/list.do'" />
 						</div>
 						<div class="align_right">	
 							<!-- <input type="button" value="ID찾기" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='member/memberJoin.do'" />		

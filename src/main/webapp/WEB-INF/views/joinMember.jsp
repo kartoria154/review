@@ -32,7 +32,10 @@
 						alert('ID를 입력하십시오.')
 						return false;
 					}
-					if(id_check_num != 1 || id_value == document.joinForm.id.value.trim()){	/* id중복검사 여부와 검사 후 변경했는지 판단 */
+					if(id_check_num != 1 || id_value != document.joinForm.id.value.trim()){	/* id중복검사 여부와 검사 후 변경했는지 판단 */
+						//console.log(id_check_num);
+						//console.log(id_value);
+						//console.log(document.joinForm.id.value.trim());
 						alert('ID 중복검사를 하십시오.')
 						return false;
 					}
@@ -67,7 +70,7 @@
 					if(document.joinForm.id.value.trim() == '') {
 						alert('ID를 입력하십시오.')
 						return false;
-					} else if (reg.test(document.joinForm.id.value.trim())){
+					} else if (!reg.test(document.joinForm.id.value.trim())){
 						alert('이메일 형식에 맞게 입력하십시오.')
 						return false;
 					} else {
@@ -85,7 +88,7 @@
 									id_check_num = 1;
 									id_value = document.joinForm.id.value.trim();
 								}else{	//ajax가 제대로 안됐을 때 .
-									alert("이 아이디는 사용  불가능합니다.");
+									alert("이 아이디는 사용 불가능합니다.");
 									id_check_num = 0;
 								}
 							},

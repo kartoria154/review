@@ -222,7 +222,7 @@
 			};
 			
 			const cmtParentModify = function(cmtContent, cSeq, cmtGrade, productSeq){
-				alert('cmtParentModify 실행');
+				//alert('cmtParentModify 실행');
 				$.ajax({
 					type: 'post',
 					url: '/board/cmtReplyModify_ok.do',
@@ -280,7 +280,7 @@
 			};
 			
 			const cmtReplyDelete = function(cSeq, password, productSeq){
-				alert('실행');
+				//alert('실행');
 				$.ajax({
 					type: 'post',
 					url: '/board/cmtReplyDelete_ok.do',

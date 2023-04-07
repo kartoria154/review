@@ -17,6 +17,10 @@
 		</style>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<script type="text/javascript">
+			const urlParams = new URL(location.href).searchParams;
+			
+			var cpage = urlParams.get('cpage');
+			
 			$( document ).ready( function() {
 				listServer(0);
 			});
@@ -26,7 +30,10 @@
 				$.ajax({
 					type: 'get',
 					url: '/board/list.data',
-					data: {"listNum": listNum},
+					data: {
+						"listNum": listNum,
+						"cpage": cpage
+						},
 					async:false,
 					dataType: 'html',
 					success: function(htmlData) {

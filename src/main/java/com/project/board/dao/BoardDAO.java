@@ -107,18 +107,25 @@ public class BoardDAO {
 	}
 	
 	public int boardModify_ok(BoardTO to) {
-		int productSeq = to.getProductSeq();
-		String oldFilename = boardMapperInter.oldFilename(productSeq);
 		int flag = 2;
 		int result = 2;
+		// 새로운 사진 파일을 업로드가 없을시
 		if(to.getProductFileName() == null) {
 			result = boardMapperInter.boardModify_ok_noImage(to);
-		} else {
+		} 
+		// 새로운 사진 파일을 업로드 했을시
+		else {
+			// 글번호 저장
+			int productSeq = to.getProductSeq();
+			// 기존 사진파일 이름 저장
+			String oldFilename = boardMapperInter.oldFilename(productSeq);
 			result = boardMapperInter.boardModify_ok_image(to);
 			if(result == 0) {
+				// DB에 업데이트 실패시 Controller에서 업로드한 이미지 파일 제거
 				File file = new File(uploadPath, to.getProductFileName());
 				file.delete();
 			} else if (result == 1) {
+				// DB에 업데이트 성공시 기존 이미지 파일 제거
 				File file = new File(uploadPath, oldFilename);
 				file.delete();
 			}

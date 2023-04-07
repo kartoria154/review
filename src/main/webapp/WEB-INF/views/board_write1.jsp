@@ -71,7 +71,7 @@
 									    <option value="콜라">콜라</option>
 									    <option value="사이다">사이다</option>
 									</select> -->
-									<input type="text" name="productCategory" value="" class="board_view_input" /> / 
+									<input type="text" name="productCategory" value="" class="board_view_input_mail" /> / 
 									<input type="text" name="productName" value="" class="board_view_input" />
 								</td>
 							</tr>
