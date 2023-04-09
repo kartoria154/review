@@ -95,6 +95,11 @@ public class BoardDAO {
 		return categoryList;
 	}
 	
+	public ArrayList<String> productSearchListData(String productCategory){
+		ArrayList<String> listData = boardMapperInter.productSearchListData(productCategory);
+		return listData;
+	}
+	
 	public BoardTO boardView(BoardTO to) {
 		boardMapperInter.hitUp(to);
 		to = boardMapperInter.boardView(to);

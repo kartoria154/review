@@ -19,7 +19,7 @@
 		<script type="text/javascript">
 			$( document ).ready( function() {
 				productCategory();
-				
+				productListData();
 			});	
 			const productCategory = function(){
 				$.ajax({
@@ -40,6 +40,23 @@
 					}
 				});
 			};
+			
+			const productListData = function(){
+				$.ajax({
+					type:"get",
+					url:"/board/searchListData.data",
+					dataType: "json",
+					success: function(jsonData){
+						//console.log(jsonData);
+						let htmlData = '';
+						for(let i = 0; i < jsonData.length; i++){
+							htmlData += '<option value="'+jsonData[i]+'"/>';
+						};
+						$("#testSearch").html(htmlData);
+					}
+				});
+			};
+			
 			window.onload = function() {
 				document.getElementById( 'searchBtn' ).onclick = function() {
 					if(document.searchForm.productNameSearch.value.trim() == ''){
@@ -48,7 +65,51 @@
 					}
 					document.searchForm.submit();
 				}
+				
+				document.getElementById('productCategorySearch').onclick = function(){
+					//console.log(document.getElementById('productCategorySearch').value.trim());
+					var searchCategory = document.getElementById('productCategorySearch').value.trim();
+					$.ajax({
+						type:"get",
+						url:"/board/searchListData.data",
+						data: {"searchCategory": searchCategory},
+						dataType: "json",
+						success: function(jsonData){
+							//console.log(jsonData);
+							let htmlData = '';
+							for(let i = 0; i < jsonData.length; i++){
+								htmlData += '<option value="'+jsonData[i]+'"/>';
+							};
+							$("#testSearch").html(htmlData);
+						}
+					});
+				}
+				
+				/*
+				document.getElementById('productNameSearch').onkeyup = function(){
+					var searchtxt = document.getElementById('productNameSearch').value.trim();
+					var searchCategory = document.getElementById('productCategorySearch').value.trim();
+					$.ajax({
+						type:"get",
+						url:"/board/searchListData.data",
+						data: {
+							"searchtxt": searchtxt,
+							"searchCategory": searchCategory
+						},
+						dataType: "json",
+						success: function(jsonData){
+							//console.log(jsonData);
+							let htmlData = '';
+							for(let i = 0; i < jsonData.length; i++){
+								htmlData += '<option value="'+jsonData[i]+'"/>';
+							};
+							$("#testSearch").html(htmlData);
+						}
+					});
+				}
+				*/
 			}
+			
 		</script>
 	</head>
 	
@@ -85,7 +146,9 @@
 								    <option value="콜라">콜라</option>
 								    <option value="사이다">사이다</option> -->
 									</select>
-									<input type="text" name="productNameSearch" id="productNameSearch"/>
+									<input type="text" name="productNameSearch" id="productNameSearch" list="testSearch"/>
+									<datalist id="testSearch">
+									</datalist>
 									<input type="button" id="searchBtn" value="검색" style="cursor: pointer;" />
 								</form>
 							</div>

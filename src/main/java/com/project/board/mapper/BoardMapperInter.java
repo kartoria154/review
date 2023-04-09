@@ -40,6 +40,9 @@ public interface BoardMapperInter {
 	@Select("select distinct productCategory from product_table")
 	public ArrayList<String> productCategory();
 	
+	@Select("select productName from product_table where productCategory like #{productCategory}")
+	public ArrayList<String> productSearchListData(String productCategory);
+	
 	// 조회수 올리기
 	@Update("update product_table set productHit=productHit+1 where productSeq=#{productSeq}")
 	public void hitUp(BoardTO to);

@@ -140,6 +140,21 @@ public class BoardController {
 		return categoryList;
 	}
 	
+	// 카테고리 메서드
+	@RequestMapping(value = "/board/searchListData.data")
+	public JSONArray productSearchListData(HttpServletRequest request, HttpServletResponse response) {
+		String searchCategory = "%%";
+		if(request.getParameter("searchCategory") != null && !request.getParameter("searchCategory").equals("") && !request.getParameter("searchCategory").equals("all")) {
+			searchCategory = "%" + request.getParameter("searchCategory") + "%";
+		}
+		ArrayList<String> Lists = dao.productSearchListData(searchCategory);
+		JSONArray productListData = new JSONArray();
+		for(String str : Lists) {
+			productListData.add(str);
+		}
+		return productListData;
+	}
+	
 	// write 페이지 호출 메서드
 	@RequestMapping(value = "/board/write.do")
 	public ModelAndView boardWrite(HttpServletRequest request, HttpServletResponse response) {
