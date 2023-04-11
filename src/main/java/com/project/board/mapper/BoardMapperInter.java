@@ -26,15 +26,9 @@ public interface BoardMapperInter {
 	
 	@Select("select productSeq, userSeq, id, nickName, productName, productCategory, productFilename, productContent, productWriteDate, productHit, productGrade, datediff(now(), productWriteDate) wgap from product_table order by productGrade desc")
 	public ArrayList<BoardTO> boardGradeList();
-	
-	@Select("select productSeq, userSeq, id, nickName, productName, productCategory, productFilename, productContent, productWriteDate, productHit, productGrade, datediff(now(), productWriteDate) wgap from product_table where productName like #{productName} order by productSeq desc")
-	public ArrayList<BoardTO> boardAllSearchList(BoardTO to);
-	
-	@Select("select productSeq, userSeq, id, nickName, productName, productCategory, productFilename, productContent, productWriteDate, productHit, productGrade, datediff(now(), productWriteDate) wgap from product_table where productCategory=#{productCategory} order by productSeq desc")
-	public ArrayList<BoardTO> boardNoAllNoSearchList(BoardTO to);
-	
-	@Select("select productSeq, userSeq, id, nickName, productName, productCategory, productFilename, productContent, productWriteDate, productHit, productGrade, datediff(now(), productWriteDate) wgap from product_table where productCategory=#{productCategory} and productName like #{productName} order by productSeq desc")
-	public ArrayList<BoardTO> boardNoAllSearchList(BoardTO to);
+
+	@Select("select productSeq, userSeq, id, nickName, productName, productCategory, productFilename, productContent, productWriteDate, productHit, productGrade, datediff(now(), productWriteDate) wgap from product_table where productCategory like #{productCategory} and productName like #{productName} order by productSeq desc")
+	public ArrayList<BoardTO> searchList(BoardTO to);
 	
 	// 카테고리 불러오기
 	@Select("select distinct productCategory from product_table")

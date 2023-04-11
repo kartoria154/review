@@ -38,21 +38,19 @@ public class BoardDAO {
 	
 	public BoardListTO boardList(BoardListTO listTO, BoardTO bTo, int searchData){
 		ArrayList<BoardTO> boardList = new ArrayList<BoardTO>();
+	
 		// db에 조회 후 데이터 저장
-		if(searchData == 3) {
-			bTo.setProductName("%"+bTo.getProductName()+"%");
-			boardList = boardMapperInter.boardNoAllSearchList(bTo);
-		} else if(searchData == 2) {
-			boardList = boardMapperInter.boardNoAllNoSearchList(bTo);
-		} else if(searchData == 1) {
-			bTo.setProductName("%"+bTo.getProductName()+"%");
-			boardList = boardMapperInter.boardAllSearchList(bTo);
-		} else if(searchData == 4) {
-			boardList = boardMapperInter.boardHitList();
-		} else if(searchData == 5) {
-			boardList = boardMapperInter.boardGradeList();
-		} else {
+		if(searchData == 0) {
 			boardList = boardMapperInter.boardDefaultList();
+		} else if(searchData == 1) {
+			boardList = boardMapperInter.boardHitList();
+		} else if(searchData == 2) {
+			boardList = boardMapperInter.boardGradeList();
+		} else if(searchData == 3) {
+			bTo.setProductName("%"+bTo.getProductName()+"%");
+			System.out.println(bTo.getProductCategory());
+			System.out.println(bTo.getProductName());
+			boardList = boardMapperInter.searchList(bTo);
 		}
 		
 		// 데이터의 총 갯수

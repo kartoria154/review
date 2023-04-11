@@ -141,14 +141,9 @@
 							</span>
 							<div style="float: right;">
 								<form action="/board/searchList.do" method="get" name="searchForm">
-									<select name="productCategory" id="productCategorySearch">
-								    <!-- <option value="all" selected="selected">--전체--</option>
-								    <option value="콜라">콜라</option>
-								    <option value="사이다">사이다</option> -->
-									</select>
+									<select name="productCategory" id="productCategorySearch"></select>
 									<input type="text" name="productNameSearch" id="productNameSearch" list="testSearch"/>
-									<datalist id="testSearch">
-									</datalist>
+									<datalist id="testSearch"></datalist>
 									<input type="button" id="searchBtn" value="검색" style="cursor: pointer;" />
 								</form>
 							</div>

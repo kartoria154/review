@@ -52,9 +52,9 @@ public class BoardController {
 			listNum =  Integer.parseInt(request.getParameter("listNum"));
 		}
 		if(listNum == 1) {
-			searchData = 4;
+			searchData = 1;
 		} else if(listNum == 2) {
-			searchData = 5;
+			searchData = 2;
 		}
 		//System.out.println(cpage);
 		BoardListTO listTO = new BoardListTO();
@@ -65,6 +65,8 @@ public class BoardController {
 		mav.setViewName("/board_list2");
 		return mav;
 	}
+	
+	/*
 	
 	// list 페이지의 게시물 정보를 부르는 메서드
 	@RequestMapping(value = "/board/list.data")
@@ -94,6 +96,9 @@ public class BoardController {
 		return mav;
 	}
 	
+	*/
+	
+	/*
 	@RequestMapping(value = "/board/searchList.do")
 	public ModelAndView searchListData(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
@@ -122,6 +127,32 @@ public class BoardController {
 				bTo.setProductName(request.getParameter("productNameSearch"));
 			}
 		}
+		listTO.setCpage(cpage);
+		listTO = dao.boardList(listTO, bTo, searchData);
+		mav.addObject("listTO", listTO);
+		mav.setViewName("/board_list2");
+		return mav;
+	}
+	*/
+	
+	@RequestMapping(value = "/board/searchList.do")
+	public ModelAndView searchListData(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView mav = new ModelAndView();
+		int cpage = 1;
+		if(request.getParameter("cpage") != null && !request.getParameter("cpage").equals("")) {
+			cpage = Integer.parseInt(request.getParameter("cpage"));
+		}
+		BoardListTO listTO = new BoardListTO();
+		BoardTO bTo = new BoardTO();
+		int searchData = 3;
+		if(!request.getParameter("productCategory").equals("all") && request.getParameter("productCategory") != null && request.getParameter("productCategory").equals("")) {
+			bTo.setProductCategory(request.getParameter("productCategory"));
+		} else {
+			bTo.setProductCategory("%%");
+		}
+		bTo.setProductName(request.getParameter("productNameSearch"));
+		System.out.println(bTo.getProductCategory());
+		System.out.println(bTo.getProductName());
 		listTO.setCpage(cpage);
 		listTO = dao.boardList(listTO, bTo, searchData);
 		mav.addObject("listTO", listTO);
@@ -301,14 +332,22 @@ public class BoardController {
 	public ModelAndView boardCmtData(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
 		CommentTO to = new CommentTO();
+		HttpSession session = request.getSession();
 		// 게시물의 번호로 DB에서 댓글 목록 가져옴
 		to.setProductSeq(Integer.parseInt(request.getParameter("productSeq")));
 		ArrayList<CommentTO> cmtList = cmtDao.commentList(to);
+		int id_check = 0;
 		if(cmtList.size() != 0) {
 			// 대댓글을 표현하기 위한 변수
 			int cmtMaxGrpl = cmtDao.cmtMaxGrpl(Integer.parseInt(request.getParameter("productSeq")));
 			mav.addObject("cmtMaxGrpl", cmtMaxGrpl);
+			for(int i = 0; i < cmtList.size(); i++ ) {
+				if((int)session.getAttribute("userSeq") == cmtList.get(i).getUserSeq() && cmtList.get(i).getCmtGrpl() == 0) {
+					id_check = 1;
+				}
+			}
 		}
+		mav.addObject("id_check", id_check);
 		mav.addObject("cmtList", cmtList);
 		mav.setViewName("/ajaxPages/cmtData");
 		return mav;
